@@ -70,7 +70,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     }
     
     /// Type safe way to create a new SocketIOClient. opts can be omitted
-    public init(socketURL: URL, config: SocketIOClientConfiguration = []) {
+    @objc public init(socketURL: URL, config: SocketIOClientConfiguration = []) {
         self.config = config
         self.socketURL = socketURL
         
@@ -132,7 +132,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
 
     /// Connect to the server. If we aren't connected after timeoutAfter, call withHandler
     /// 0 Never times out
-    public func connect(timeoutAfter: Int, withHandler handler: (() -> Void)?) {
+    @objc public func connect(timeoutAfter: Int, withHandler handler: (() -> Void)?) {
         assert(timeoutAfter >= 0, "Invalid timeout: \(timeoutAfter)")
 
         guard status != .connected else {
@@ -196,7 +196,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     }
 
     /// Disconnects the socket.
-    public func disconnect() {
+    @objc public func disconnect() {
         DefaultSocketLogger.Logger.log("Closing socket", type: logType)
 
         didDisconnect(reason: "Disconnect")
@@ -208,7 +208,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     }
 
     /// Same as emit, but meant for Objective-C
-    public func emit(_ event: String, with items: [Any]) {
+    @objc public func emit(_ event: String, with items: [Any]) {
         guard status == .connected else {
             handleEvent("error", data: ["Tried emitting \(event) when not connected"], isInternalMessage: true)
             return
@@ -224,7 +224,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     }
 
     /// Same as emitWithAck, but for Objective-C
-    public func emitWithAck(_ event: String, with items: [Any]) -> OnAckCallback {
+    @objc public func emitWithAck(_ event: String, with items: [Any]) -> OnAckCallback {
         return createOnAck([event] + items)
     }
 
@@ -347,7 +347,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     /// Adds a handler for an event.
     /// Returns: A unique id for the handler
     @discardableResult
-    public func on(_ event: String, callback: @escaping NormalCallback) -> UUID {
+    @objc public func on(_ event: String, callback: @escaping NormalCallback) -> UUID {
         DefaultSocketLogger.Logger.log("Adding handler for event: %@", type: logType, args: event)
 
         let handler = SocketEventHandler(event: event, id: UUID(), callback: callback)

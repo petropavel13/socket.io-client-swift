@@ -66,7 +66,7 @@ public final class OnAckCallback : NSObject {
         DefaultSocketLogger.Logger.log("OnAckCallback for \(ackNumber) being released", type: "OnAckCallback")
     }
     
-    public func timingOut(after seconds: Int, callback: @escaping AckCallback) {
+    @objc public func timingOut(after seconds: Int, callback: @escaping AckCallback) {
         guard let socket = self.socket else { return }
         
         socket.ackQueue.sync() {
