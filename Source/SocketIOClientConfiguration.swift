@@ -22,9 +22,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-import Foundation
-
-@objc public final class SocketIOClientConfiguration : NSObject, ExpressibleByArrayLiteral, Collection, MutableCollection {
+public struct SocketIOClientConfiguration : ExpressibleByArrayLiteral, Collection, MutableCollection {
     public typealias Element = SocketIOClientOption
     public typealias Index = Array<SocketIOClientOption>.Index
     public typealias Generator = Array<SocketIOClientOption>.Iterator
@@ -84,7 +82,7 @@ import Foundation
         return backingArray.index(after: i)
     }
     
-    public func insert(_ element: Element, replacing replace: Bool = true) {
+    public mutating func insert(_ element: Element, replacing replace: Bool = true) {
         for i in 0..<backingArray.count where backingArray[i] == element {
             guard replace else { return }
             

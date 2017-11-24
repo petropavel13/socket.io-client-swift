@@ -90,7 +90,7 @@ extension NSDictionary {
     }
     
     func toSocketConfiguration() -> SocketIOClientConfiguration {
-        let options = [] as SocketIOClientConfiguration
+        var options = [] as SocketIOClientConfiguration
         
         for (rawKey, value) in self {
             if let key = rawKey as? String, let opt = NSDictionary.keyValueToSocketIOClientOption(key: key, value: value) {
