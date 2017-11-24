@@ -70,7 +70,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     }
     
     /// Type safe way to create a new SocketIOClient. opts can be omitted
-    @objc public init(socketURL: URL, config: SocketIOClientConfiguration = []) {
+    public init(socketURL: URL, config: SocketIOClientConfiguration = []) {
         self.config = config
         self.socketURL = socketURL
         
@@ -108,7 +108,7 @@ public final class SocketIOClient : NSObject, SocketEngineClient, SocketParsable
     
     /// Not so type safe way to create a SocketIOClient, meant for Objective-C compatiblity.
     /// If using Swift it's recommended to use `init(socketURL: NSURL, options: Set<SocketIOClientOption>)`
-    public convenience init(socketURL: NSURL, config: NSDictionary?) {
+    @objc public convenience init(socketURL: NSURL, config: NSDictionary?) {
         self.init(socketURL: socketURL as URL, config: config?.toSocketConfiguration() ?? [])
     }
 
