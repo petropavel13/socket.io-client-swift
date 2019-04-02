@@ -78,6 +78,8 @@ open class SocketIOClient : NSObject, SocketIOClientSpec, SocketEngineClient, So
 
     private let logType = "SocketIOClient"
 
+    private let parseQueue = DispatchQueue(label: "com.socketio.parseQueue")
+
     private var anyHandler: ((SocketAnyEvent) -> Void)?
     private var currentReconnectAttempt = 0
     private var handlers = [SocketEventHandler]()
@@ -341,13 +343,9 @@ open class SocketIOClient : NSObject, SocketIOClientSpec, SocketEngineClient, So
     ///
     /// - parameter reason: The reason that the engine closed.
     open func engineDidClose(reason: String) {
-        handleQueue.async {
-            self._engineDidClose(reason: reason)
+        parseQueue.sync {
+            waitingPackets.removeAll()
         }
-    }
-
-    private func _engineDidClose(reason: String) {
-        waitingPackets.removeAll()
 
         if status != .disconnected {
             status = .notConnected
@@ -532,14 +530,14 @@ open class SocketIOClient : NSObject, SocketIOClientSpec, SocketEngineClient, So
     public func parseEngineMessage(_ msg: String) {
         DefaultSocketLogger.Logger.log("Should parse message: %@", type: "SocketIOClient", args: msg)
 
-        handleQueue.async { self.parseSocketMessage(msg) }
+        parseQueue.async { self.parseSocketMessage(msg) }
     }
 
     /// Called when the engine receives binary data.
     ///
     /// - parameter data: The data the engine received.
     public func parseEngineBinaryData(_ data: Data) {
-        handleQueue.async { self.parseBinaryData(data) }
+        parseQueue.async { self.parseBinaryData(data) }
     }
 
     /// Tries to reconnect to the server.
